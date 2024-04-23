@@ -1,0 +1,40 @@
+{% extends "main.html" %}
+
+{% block content %}
+<table>
+    <thead>
+    <tr>
+        <th>Order number</th>
+        <th>Price</th>
+        <th>Order filled</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+
+    {% for order in orders %}
+    <tr>
+        <th>{{ order.id }}</th>
+        <th>{{ order.cost }}</th>
+        <th>{{ order.time_in|time:"H:i" }}</th>
+        <th>{% if not order.complete %}
+             Order is not ready yet.
+            {% elif order.time_out is None %}
+            <button><a href="{% url 'take_order' order.id %}"> Take </a></button>
+            {% else %}
+            Order received {{ order.time_out|time:"H:i" }}
+            {% endif %}
+        </th>
+
+    </tr>
+    {% endfor %}
+</table>
+
+{% extends "main.html" %}
+
+{% block content %}
+<form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Make an order">
+</form>
+
+{% endblock %}
